@@ -1,89 +1,66 @@
-﻿@* @model TimeTableInputModel
-<h2>Enter Time-Table Details</h2>
-<form asp-action="SubmitInput" method="post">
-    <label>No. of Working Days:</label>
-    <input asp-for="WorkingDays" required />
-    <span asp-validation-for="WorkingDays"></span>
-
-    <label>No. of Subjects per Day:</label>
-    <input asp-for="SubjectsPerDay" required />
-    <span asp-validation-for="SubjectsPerDay"></span>
-
-    <label>Total Subjects:</label>
-    <input asp-for="TotalSubjects" required />
-    <span asp-validation-for="TotalSubjects"></span>
-
-    <button type="submit">Next</button>
-</form>
-
- *@
-@model TimeTableInputModel
+﻿@model TimeTableInputModel
 @{
-    ViewData["Title"] = "Enter Time-Table Details";
+	ViewData["Title"] = "Enter Time-Table Details";
 }
 
 <h2 class="text-center">Please Enter the Details for Generating Dynamic Time Table</h2>
 
 <div class="container mt-4">
-    <form asp-action="SubmitInput" method="post">
-        <table class="table table-bordered">
-            <tbody>
-                <!-- No. of Working Days -->
-                <tr>
-                    <td><label class="form-label">No. of Working Days:</label></td>
-                    <td>
-                        <input asp-for="WorkingDays" class="form-control" required
-                               placeholder="Enter a number between 1 and 7"
-                               min="1" max="7" value=""
-                               oninput="validateNumber(this, 1, 7)" />
-                        <span asp-validation-for="WorkingDays" class="text-danger"></span>
-                    </td>
-                </tr>
+	<form asp-action="SubmitInput" method="post">
+		<table class="table table-bordered">
+			<tbody>
+				<tr>
+					<td><label class="form-label">No. of Working Days:</label></td>
+					<td>
+						<input asp-for="WorkingDays" class="form-control" required
+							   placeholder="Enter a number between 1 and 7"
+							   min="1" max="7" value=""
+							   oninput="validateNumber(this, 1, 7)" />
+						<span asp-validation-for="WorkingDays" class="text-danger"></span>
+					</td>
+				</tr>
 
-                <!-- No. of Subjects per Day -->
-                <tr>
-                    <td><label class="form-label">No. of Subjects per Day:</label></td>
-                    <td>
-                        <input asp-for="SubjectsPerDay" class="form-control" required
-                               placeholder="Enter a number between 1 and 8"
-                               min="1" max="8" value=""
-                               oninput="validateNumber(this, 1, 8)" />
-                        <span asp-validation-for="SubjectsPerDay" class="text-danger"></span>
-                    </td>
-                </tr>
+				<tr>
+					<td><label class="form-label">No. of Subjects per Day:</label></td>
+					<td>
+						<input asp-for="SubjectsPerDay" class="form-control" required
+							   placeholder="Enter a number between 1 and 8"
+							   min="1" max="8" value=""
+							   oninput="validateNumber(this, 1, 8)" />
+						<span asp-validation-for="SubjectsPerDay" class="text-danger"></span>
+					</td>
+				</tr>
 
-                <!-- Total Subjects -->
-                <tr>
-                    <td><label class="form-label">Total Subjects:</label></td>
-                    <td>
-                        <input asp-for="TotalSubjects" class="form-control" required
-                               placeholder="Enter a positive number"
-                               min="1" value=""
-                               oninput="validateNumber(this, 1, 100)" />
-                        <span asp-validation-for="TotalSubjects" class="text-danger"></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+				<tr>
+					<td><label class="form-label">Total Subjects:</label></td>
+					<td>
+						<input asp-for="TotalSubjects" class="form-control" required
+							   placeholder="Enter a positive number"
+							   min="1" value=""
+							   oninput="validateNumber(this, 1, 100)" />
+						<span asp-validation-for="TotalSubjects" class="text-danger"></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary">Next</button>
-        </div>
-    </form>
+		<div class="text-center">
+			<button type="submit" class="btn btn-primary">Next</button>
+		</div>
+	</form>
 </div>
 
-<!-- JavaScript for Live Validation -->
 <script>
-    function validateNumber(input, min, max) {
-        // Remove non-numeric characters
-        input.value = input.value.replace(/[^0-9]/g, '');
+	function validateNumber(input, min, max) {
+		// Remove non-numeric characters
+		input.value = input.value.replace(/[^0-9]/g, '');
 
-        // Convert to integer for validation
-        let value = parseInt(input.value, 10);
+		// Convert to integer for validation
+		let value = parseInt(input.value, 10);
 
-        // Ensure value is within the range, or clear it
-        if (isNaN(value) || value < min || value > max) {
-            input.value = "";
-        }
-    }
+		// Ensure value is within the range, or clear it
+		if (isNaN(value) || value < min || value > max) {
+			input.value = "";
+		}
+	}
 </script>

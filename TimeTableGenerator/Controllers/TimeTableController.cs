@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using TimeTableGenerator.Models;
 
 namespace TimeTableGenerator.Controllers
@@ -96,6 +97,14 @@ namespace TimeTableGenerator.Controllers
                 Schedule = schedule
             };
         }
+
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
 
     }
 }

@@ -27,7 +27,6 @@
 				{
 					<tr>
 						<td>
-
 							<input type="text" name="subjectHours[@i].SubjectName"
 								   class="form-control subject-input"
 								   required placeholder="Enter Subject"
@@ -35,7 +34,6 @@
 
 							<script>
 								function validateSubjectName(input) {
-									// Remove any non-alphabetic characters (and spaces)
 									input.value = input.value.replace(/[^A-Za-z\s]/g, '');
 								}
 							</script>
@@ -52,7 +50,7 @@
 			</tbody>
 		</table>
 
-		<p class="alert alert-warning" id="allocatedHoursContainer" style="display: none;" >
+		<p class="alert alert-warning" id="allocatedHoursContainer" style="display: none;">
 			<strong>Allocated Hours: </strong><span id="allocatedHours">0</span>
 		</p>
 
@@ -64,7 +62,6 @@
 
 
 <script>
-
 	let totalHours = parseInt(document.getElementById("totalHours").innerText);
 	let submitBtnNew = document.getElementById("submitBtn");
 
@@ -74,25 +71,24 @@
 	} else {
 		submitBtnNew.disabled = true;
 	}
-
 		function checkDuplicateSubjects() {
 		let subjectInputs = document.querySelectorAll('.subject-input');
 		let subjectNames = [];
 
 		subjectInputs.forEach(input => {
-			input.addEventListener('blur', function() { // Trigger when input loses focus
+			input.addEventListener('blur', function() { 
 				let value = input.value.trim().toUpperCase();
 
 			if (value === "") return;
 				if (subjectNames.includes(value)) {
 					alert(`"${input.value}" is a duplicate subject!`);
-					input.value = ""; // Clear input if it's a duplicate
+					input.value = ""; 
 				} else {
 					// Check if the exact same subject already exists (case-insensitive)
 					for (let name of subjectNames) {
 						if (name === value) {
 							alert(`"${input.value}" is a duplicate subject!`);
-							input.value = ""; // Clear input if it's a duplicate
+							input.value = ""; 
 							return;
 						}
 					}
