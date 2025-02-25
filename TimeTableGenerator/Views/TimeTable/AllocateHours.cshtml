@@ -37,185 +37,135 @@
  *@
 
 
-
-                @model List<SubjectAllocationModel>
+@model List<SubjectAllocationModel>
 @{
-    ViewData["Title"] = "Allocate Subject Hours";
+	ViewData["Title"] = "Allocate Subject Hours";
 }
 
 <h2 class="text-center">Allocate Subject Hours</h2>
 
 <div class="container mt-4">
-    <!-- Display Summary Details -->
-    <div class="alert alert-info">
-        <p><strong>Total Subjects:</strong> <span id="totalSubjects">@ViewBag.TotalSubjects</span></p>
-        <p><strong>No. of Subjects per Day:	:</strong> <span id="subjectsPerDay">@ViewBag.SubjectsPerDay</span></p>
+	<div class="alert alert-info">
+		<p><strong>Total Subjects:</strong> <span id="totalSubjects">@ViewBag.TotalSubjects</span></p>
+		<p><strong>No. of Subjects per Day:	:</strong> <span id="subjectsPerDay">@ViewBag.SubjectsPerDay</span></p>
 
-        <p><strong>Number of Working Days:</strong> <span id="workingDays">@ViewBag.WorkingDays</span></p>
-        <p><strong>Total Hours (Subjects Per Day × Working Days):</strong> <span id="totalHours">@ViewBag.TotalHours</span></p>
-    </div>
+		<p><strong>Number of Working Days:</strong> <span id="workingDays">@ViewBag.WorkingDays</span></p>
+		<p><strong>Total Hours (Subjects Per Day × Working Days):</strong> <span id="totalHours">@ViewBag.TotalHours</span></p>
+	</div>
 
-    <form asp-action="SubmitAllocation" method="post" onsubmit="return validateTotalHours()">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Subject Name</th>
-                    <th>Hours</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < ViewBag.TotalSubjects; i++)
-                {
-                    <tr>
-                        <!-- Subject Name Input with Unique Check -->
-                        <td>@* 
-                            <input type="text" name="subjectHours[@i].SubjectName"
-                                   class="form-control subject-input"
-                                   required placeholder="Enter Subject"
-                                   oninput="checkDuplicateSubjects()" /> *@
+	<form asp-action="SubmitAllocation" method="post" onsubmit="return validateTotalHours()">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Subject Name</th>
+					<th>Hours</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (int i = 0; i < ViewBag.TotalSubjects; i++)
+				{
+					<tr>
+						<td>
 
+							<input type="text" name="subjectHours[@i].SubjectName"
+								   class="form-control subject-input"
+								   required placeholder="Enter Subject"
+								   oninput="checkDuplicateSubjects(); validateSubjectName(this)" />
 
-                            <input type="text" name="subjectHours[@i].SubjectName"
-                                   class="form-control subject-input"
-                                   required placeholder="Enter Subject"
-                                   oninput="checkDuplicateSubjects(); validateSubjectName(this)" />
+							<script>
+								function validateSubjectName(input) {
+									// Remove any non-alphabetic characters (and spaces)
+									input.value = input.value.replace(/[^A-Za-z\s]/g, '');
+								}
+							</script>
 
-                            <script>
-                                function validateSubjectName(input) {
-                                    // Remove any non-alphabetic characters (and spaces)
-                                    input.value = input.value.replace(/[^A-Za-z\s]/g, '');
-                                }
-                            </script>
+						</td>
 
-                        </td>
+						<td>
+							<input type="number" name="subjectHours[@i].Hours"
+								   class="form-control hour-input"
+								   required min="1"
+								   placeholder="Enter Hours"
+								   oninput="updateTotalHours()" />
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
 
-                        <!-- Hours Input -->
-                        <td>
-                            <input type="number" name="subjectHours[@i].Hours"
-                                   class="form-control hour-input"
-                                   required min="1"
-                                   placeholder="Enter Hours"
-                                   oninput="updateTotalHours()" />
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+		<p class="alert alert-warning" id="allocatedHoursContainer" @* style="display: none; *@>
+			<strong>Allocated Hours: </strong><span id="allocatedHours">0</span>
+		</p>
 
-@*          <p class="alert alert-warning"><strong>Allocated Hours: </strong><span id="allocatedHours" >0 </span></p>
- *@ 
-
-        <p class="alert alert-warning" id="allocatedHoursContainer" @* style="display: none; *@>
-            <strong>Allocated Hours: </strong><span id="allocatedHours">0</span>
-        </p>
-
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary" id="submitBtn"  >Submit</button>
-        </div>
-    </form>
+		<div class="text-center">
+			<button type="submit" class="btn btn-primary" id="submitBtn" disabled>Submit</button>
+		</div>
+	</form>
 </div>
 
 
-
-
-
-
-<!-- JavaScript for Validation -->
 <script>
 
-          
+	let totalHours = parseInt(document.getElementById("totalHours").innerText);
+	let submitBtnNew = document.getElementById("submitBtn");
 
+	// Check if the submit button state is saved in localStorage
+	if (localStorage.getItem('submitBtnState') === 'enabled') {
+		submitBtnNew.disabled = false;
+	} else {
+		submitBtnNew.disabled = true;
+	}
 
-        let totalHours = parseInt(document.getElementById("totalHours").innerText);
-    let submitBtnNew = document.getElementById("submitBtn");
+		function checkDuplicateSubjects() {
+		let subjectInputs = document.querySelectorAll('.subject-input');
+		let subjectNames = [];
 
-    // Check if the submit button state is saved in localStorage
-    if (localStorage.getItem('submitBtnState') === 'enabled') {
-        submitBtnNew.disabled = false;
-    } else {
-        submitBtnNew.disabled = true;
-    }
+		subjectInputs.forEach(input => {
+			input.addEventListener('blur', function() { // Trigger when input loses focus
+				let value = input.value.trim().toUpperCase();
 
-    @* function checkDuplicateSubjects() {
-        let subjectInputs = document.querySelectorAll('.subject-input');
-        let subjectSet = new Set();
+			if (value === "") return;
+				if (subjectNames.includes(value)) {
+					alert(`"${input.value}" is a duplicate subject!`);
+					input.value = ""; // Clear input if it's a duplicate
+				} else {
+					// Check if the exact same subject already exists (case-insensitive)
+					for (let name of subjectNames) {
+						if (name === value) {
+							alert(`"${input.value}" is a duplicate subject!`);
+							input.value = ""; // Clear input if it's a duplicate
+							return;
+						}
+					}
+					subjectNames.push(value); // Add valid subject name to the list
+				}
+			});
+		});
+	}
 
-        subjectInputs.forEach(input => {
-            let value = input.value.trim().toUpperCase();
-            if (value !== "" && subjectSet.has(value)) {
-                alert("Duplicate subject names are not allowed!");
-                input.value = "";
-            } else {
-                subjectSet.add(value);
-            }
-        });
-    }
- *@
+	function updateTotalHours() {
+		let allocatedHours = 0;
+		let hourInputs = document.querySelectorAll('.hour-input');
 
+		hourInputs.forEach(input => {
+			let value = parseInt(input.value) || 0;
+			allocatedHours += value;
+		});
 
-             function checkDuplicateSubjects() {
-        let subjectInputs = document.querySelectorAll('.subject-input');
-        let subjectNames = [];
+		document.getElementById("allocatedHours").innerText = allocatedHours;
 
-        subjectInputs.forEach(input => {
-            input.addEventListener('blur', function() { // Trigger when input loses focus
-                let value = input.value.trim().toUpperCase();
+		if (totalHours === allocatedHours) {
+			submitBtnNew.disabled = false;
+			localStorage.setItem('submitBtnState', 'enabled');  
+		} else {
+			submitBtnNew.disabled = true;
+			localStorage.setItem('submitBtnState', 'disabled'); 
+		}
+	}
 
-                // Skip empty values
-                if (value === "") return;
-
-                // Check for exact duplicates (case insensitive)
-                if (subjectNames.includes(value)) {
-                    alert(`"${input.value}" is a duplicate subject!`);
-                    input.value = ""; // Clear input if it's a duplicate
-                } else {
-                    // Check if the exact same subject already exists (case-insensitive)
-                    for (let name of subjectNames) {
-                        if (name === value) {
-                            alert(`"${input.value}" is a duplicate subject!`);
-                            input.value = ""; // Clear input if it's a duplicate
-                            return;
-                        }
-                    }
-
-                    subjectNames.push(value); // Add valid subject name to the list
-                }
-            });
-        });
-    }
-
-
-
-
-    function updateTotalHours() {
-        let allocatedHours = 0;
-        let hourInputs = document.querySelectorAll('.hour-input');
-
-        hourInputs.forEach(input => {
-            let value = parseInt(input.value) || 0;
-            allocatedHours += value;
-        });
-
-        document.getElementById("allocatedHours").innerText = allocatedHours;
-
-        // If totalHours is equal to allocatedHours, enable the submit button and save the state
-        if (totalHours === allocatedHours) {
-            submitBtnNew.disabled = false;
-            localStorage.setItem('submitBtnState', 'enabled');  // Save the state in localStorage
-        } else {
-            submitBtnNew.disabled = true;
-            localStorage.setItem('submitBtnState', 'disabled'); // Save the state in localStorage
-        }
-    }
-
-    // Global variable for allocated hours
-    var globalAllocatedHours = 0;
-
-    function validateTotalHours() {
-        updateTotalHours();
-        globalAllocatedHours = parseInt(document.getElementById("allocatedHours").innerText);
-        return true;
-    }
-
+	function validateTotalHours() {
+		updateTotalHours();
+		return true;
+	}
 
 </script>
