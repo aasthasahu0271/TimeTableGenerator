@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/TimeTableGenerator/Controllers/HomeController.cs
+/TimeTableGenerator/Views/Home/Index.cshtml
+/TimeTableGenerator/Views/Home/Privacy.cshtml
+/TimeTableGenerator/wwwroot/js/timeTableGenerator.js
+/TimeTableGenerator/Views/Home/Index.cshtml
+/TimeTableGenerator/Views/Home/Privacy.cshtml

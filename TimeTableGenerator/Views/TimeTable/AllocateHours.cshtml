@@ -1,48 +1,9 @@
-﻿@* @model List<SubjectAllocationModel>
-@{
-    ViewData["Title"] = "Allocate Subject Hours";
-}
-
-<h2>Allocate Subject Hours</h2>
-<p><strong>Total Hours:</strong> @ViewBag.TotalHours</p>
-
-<p><strong>Total Hours (No. of Subjects per Day * No. of Working Days	):</strong> @ViewBag.TotalHours</p>
-
-<form asp-action="SubmitAllocation" method="post">
-    <table>
-        <thead>
-            <tr>
-                <th>Subject Name</th>
-                <th>Hours</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < ViewBag.TotalSubjects; i++)
-            {
-                <tr>
-                    <td>
-                        <input type="text" name="subjectHours[@i].SubjectName" required placeholder="Enter Subject" />
-                    </td>
-                    <td>
-                        <input type="number" name="subjectHours[@i].Hours" required min="1" placeholder="Enter Hours" />
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <button type="submit">Submit</button>
-</form>
-
- *@
-
-
-@model List<SubjectAllocationModel>
+﻿@model List<SubjectAllocationModel>
 @{
 	ViewData["Title"] = "Allocate Subject Hours";
 }
 
-<h2 class="text-center">Allocate Subject Hours</h2>
+<h2 class="text-center">Please Allocate Hours for Each Subject</h2>
 
 <div class="container mt-4">
 	<div class="alert alert-info">
@@ -78,9 +39,7 @@
 									input.value = input.value.replace(/[^A-Za-z\s]/g, '');
 								}
 							</script>
-
 						</td>
-
 						<td>
 							<input type="number" name="subjectHours[@i].Hours"
 								   class="form-control hour-input"
@@ -93,7 +52,7 @@
 			</tbody>
 		</table>
 
-		<p class="alert alert-warning" id="allocatedHoursContainer" @* style="display: none; *@>
+		<p class="alert alert-warning" id="allocatedHoursContainer" style="display: none;" >
 			<strong>Allocated Hours: </strong><span id="allocatedHours">0</span>
 		</p>
 
@@ -156,10 +115,10 @@
 
 		if (totalHours === allocatedHours) {
 			submitBtnNew.disabled = false;
-			localStorage.setItem('submitBtnState', 'enabled');  
+			localStorage.setItem('submitBtnState', 'enabled');
 		} else {
 			submitBtnNew.disabled = true;
-			localStorage.setItem('submitBtnState', 'disabled'); 
+			localStorage.setItem('submitBtnState', 'disabled');
 		}
 	}
 

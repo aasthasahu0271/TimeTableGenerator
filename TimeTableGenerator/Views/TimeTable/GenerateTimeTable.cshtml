@@ -1,32 +1,9 @@
-﻿@* @model TimeTableModel
-<h2>Generated Time-Table</h2>
-<table border="1">
-    <tr>
-        @foreach (var day in Model.Days)
-        {
-            <th>@day</th>
-        }
-    </tr>
-
-    @foreach (var row in Model.Schedule)
-    {
-        <tr>
-            @foreach (var subject in row)
-            {
-                <td>@subject</td>
-            }
-        </tr>
-    }
-</table>
- *@
-
-
- @model TimeTableModel
+﻿@model TimeTableModel
 @{
     ViewData["Title"] = "Generated Time-Table";
 }
 
-<h2 class="text-center">Generated Time-Table</h2>
+<h2 class="text-center">Dynamic Time Table</h2>
 
 <div class="table-responsive">
     <table class="table table-bordered text-center">
